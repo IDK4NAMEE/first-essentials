@@ -1,0 +1,75 @@
+#!/bin/bash
+
+if [ "$EUID" -ne 0 ]; then
+    echo "Rerun in sudo"
+    exit 1
+fi
+
+echo "Warning:Make sure to enable multilib"
+
+read a
+
+sudo pacman -Syu
+
+# echo "User name"
+
+# read b
+
+echo " "
+echo "Windows manager:"
+echo "1. Hyprland"
+echo "2. I3wm"
+echo "0. Skip"
+
+read c
+
+if [ $c -eq 1 ]; then
+	sudo pacman -S hyprland
+elif [ $c -eq 2 ]; then
+	sudo pacman -S xorg-server xorg-xinit xorg-xrandr i3-wm picom  dmenu
+	sudo echo "" > /home/idk/.xinitrc
+	sudo touch /home/$SUDO_USER/.xinitrc
+	sudo echo "picom &" >> /home/$SUDO_USER/.xinitrc
+	sudo echo "xrandr -s 1920x1080 &" >> /home/$SUDO_USER/.xinitrc
+	sudo echo "exec i3;" >> /home/$SUDO_USER/.xinitrc
+fi
+
+echo " "
+echo "Terminal:"
+echo "1. Kitty"
+echo "2. Alacritty"
+echo "0. Skip "
+
+read d
+
+if [ $d -eq 1 ]; then
+	sudo pacman -S kitty
+elif [ $d -eq 2 ]; then
+	sudo pacman -S alacritty
+fi
+
+#IDK & 2 lazy to know how to setup pulse audio
+
+echo " "
+echo "Sound:"
+echo "1. Pipewire"
+# echo "2. Pulseaudio"
+echo "0. Skip"
+
+read e
+
+if [ $e -eq 1 ]; then
+	sudo pacman -S pipewire pipewire-pulse
+# elif [ $e -eq 2 ]; then
+# 	sudo pacman -S pulseaudio
+fi
+
+echo ""
+echo "Software distribution tools?(Y/N)"
+echo "(wget, git, flatpak)"
+
+read f
+
+if [[ "$f" =~ ^([Yy]|[Yy][Ee][Ss])$ ]]; then
+    sudo pacman -S git wget flatpak
+fi
